@@ -58,9 +58,12 @@ class chat_proto(LineOnlyReceiver):
                 self.sendLine(user)
             self.sendLine(b'')
         else:
-            for client in self.factory.clients:
-                if client != self:
-                    client.transport.write(colored.fg(self.color).encode() + self.username + colored.attr(0).encode() + b' ' + line + b'\n')
+            self.msg(colored.fg(self.color).encode() + self.username + colored.attr(0).encode() + b' ' + line + b'\n')
+
+    def msg(self, line):
+        for client in self.factory.clients:
+            if client != self:
+                client.transport.write(line)
 
 factory = ServerFactory()
 factory.protocol = chat_proto
