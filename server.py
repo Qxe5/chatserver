@@ -14,6 +14,7 @@ from twisted.protocols.basic import LineOnlyReceiver
 port = 2000
 
 class chat_proto(LineOnlyReceiver):
+    delimiter = b'\n'
     username_prompt = colored.attr('bold').encode() + b'Username:' + colored.attr(0).encode()
 
     def __init__(self):
