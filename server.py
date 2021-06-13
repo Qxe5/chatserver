@@ -4,8 +4,6 @@ TODO:
 * Subset of colors
 '''
 
-import random
-
 import colored
 from twisted.internet import reactor
 from twisted.internet.protocol import ServerFactory
@@ -19,7 +17,7 @@ class chat_proto(LineOnlyReceiver):
 
     def __init__(self):
         self.username = None
-        self.color = random.randint(0, 255)
+        self.color = 2
 
     def connectionMade(self):
         self.sendLine(b'\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
