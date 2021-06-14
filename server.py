@@ -20,6 +20,15 @@ class chat_proto(LineOnlyReceiver):
         self.username = None
         self.color = 2
 
+    def strip(self, line):
+        sline = b''
+
+        for c in line:
+            if c >= 32 and c <= 127:
+                sline += chr(c).encode()
+
+        return sline.strip()
+
     def connectionMade(self):
         self.sendLine(b'\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         self.sendLine(b'Welcome!')
@@ -36,13 +45,13 @@ class chat_proto(LineOnlyReceiver):
             self.msg(b'<- ' + colored.fg(self.color).encode() + self.username + colored.attr(0).encode())
 
     def lineReceived(self, line):
-        sline = line.strip()
+        line = self.strip(line)
 
         if not self.username:
             if len(line) == 0:
                 self.sendLine(chat_proto.username_prompt)
-            elif sline in self.factory.users:
-                self.sendLine(sline + b' is in use')
+            elif line in self.factory.users:
+                self.sendLine(line + b' is in use')
                 self.sendLine(chat_proto.username_prompt)
             else:
                 self.username = line
@@ -53,7 +62,7 @@ class chat_proto(LineOnlyReceiver):
                 self.sendLine(b'Type !users for a list of online users\n')
 
                 self.msg(b'-> ' + colored.fg(self.color).encode() + self.username + colored.attr(0).encode())
-        elif sline.lower() == b'!users':
+        elif line.lower() == b'!users':
             for user in self.factory.users:
                 self.sendLine(user)
             self.sendLine(b'')
