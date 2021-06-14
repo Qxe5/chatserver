@@ -31,15 +31,6 @@ class chat_proto(LineOnlyReceiver):
         self.lastmsgtime = time.time()
         self.ratelimit_warn = 0
 
-    def strip(self, line):
-        sline = b''
-
-        for c in line:
-            if c >= 32 and c <= 127:
-                sline += chr(c).encode()
-
-        return sline.strip()
-
     def connectionMade(self):
         self.sendLine(b'\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         self.sendLine(b'Welcome!')
@@ -101,6 +92,15 @@ class chat_proto(LineOnlyReceiver):
         for client in self.factory.clients:
             if client != self:
                 client.transport.write(line + b'\n')
+
+    def strip(self, line):
+        sline = b''
+
+        for c in line:
+            if c >= 32 and c <= 127:
+                sline += chr(c).encode()
+
+        return sline.strip()
 
 factory = ServerFactory()
 factory.protocol = chat_proto
