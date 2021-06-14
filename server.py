@@ -1,7 +1,7 @@
 '''
 TODO:
 
-* Spam mitigations (!kick/!lock, inform max msg length, ...) -> server up
+* Spam mitigations (!kick/!lock, ...) -> server up
 * Edit readme
 * Subset of colors
 * Timestamps
@@ -87,11 +87,15 @@ class chat_proto(LineOnlyReceiver):
                 self.ratelimit_warn += 1
 
                 if self.ratelimit_warn == chat_proto.ratelimit_maxwarn:
-                    reason = b'Rate limit exceeded'
+                    self.dc(b'Rate limit exceeded')
 
-                    self.sendLine(reason)
-                    self.connectionLost(reason)
-                    self.transport.loseConnection()
+    def lineLengthExceeded(self, line):
+        self.dc(b'Message length exceeded')
+
+    def dc(self, reason):
+        self.sendLine(reason)
+        self.connectionLost(reason)
+        self.transport.loseConnection()
 
     def msg(self, line):
         for client in self.factory.clients:
