@@ -64,6 +64,8 @@ class chat_proto(LineOnlyReceiver):
                 self.sendLine(b'Type !users for a list of online users\n')
 
                 self.msg(b'-> ' + colored.fg(self.color).encode() + self.username + colored.attr(0).encode())
+        elif len(line) == 0:
+            self.sendLine(b'Not sent: Blank line')
         elif line.lower() == b'!users':
             for user in self.factory.users:
                 self.sendLine(user)
