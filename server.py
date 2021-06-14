@@ -1,13 +1,15 @@
 '''
 TODO:
 
-* Spam mitigations (rate limit, !kick/!lock, inform max msg length, ...) -> server up
+* Spam mitigations (!kick/!lock, inform max msg length, ...) -> server up
 * Edit readme
 * Subset of colors
 * Timestamps
 * One word username
 * Review pull request
 '''
+
+import time
 
 import colored
 from twisted.internet import reactor
@@ -20,10 +22,14 @@ class chat_proto(LineOnlyReceiver):
     MAX_LENGTH = 256
     delimiter = b'\n'
     username_prompt = colored.attr('bold').encode() + b'Username:' + colored.attr(0).encode()
+    ratelimit_interval = 1
+    ratelimit_maxwarn = 8
 
     def __init__(self):
         self.username = None
         self.color = 2
+        self.lastmsgtime = time.time()
+        self.ratelimit_warn = 0
 
     def strip(self, line):
         sline = b''
@@ -72,7 +78,20 @@ class chat_proto(LineOnlyReceiver):
                 self.sendLine(user)
             self.sendLine(b'')
         else:
-            self.msg(colored.fg(self.color).encode() + self.username + colored.attr(0).encode() + b' ' + line)
+            if time.time() - self.lastmsgtime >= chat_proto.ratelimit_interval:
+                self.msg(colored.fg(self.color).encode() + self.username + colored.attr(0).encode() + b' ' + line)
+                self.lastmsgtime = time.time()
+            else:
+                self.sendLine(b'Not sent: To quick (' + str(self.ratelimit_warn).encode() + b'/' + str(chat_proto.ratelimit_maxwarn).encode() + b')')
+
+                self.ratelimit_warn += 1
+
+                if self.ratelimit_warn == chat_proto.ratelimit_maxwarn:
+                    reason = b'Rate limit exceeded'
+
+                    self.sendLine(reason)
+                    self.connectionLost(reason)
+                    self.transport.loseConnection()
 
     def msg(self, line):
         for client in self.factory.clients:
