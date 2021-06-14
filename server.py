@@ -1,7 +1,12 @@
 '''
 TODO:
 
+* Spam mitigations (rate limit, !kick/!lock, inform max msg length, ...) -> server up
+* Edit readme
 * Subset of colors
+* Timestamps
+* One word username
+* Review pull request
 '''
 
 import colored
