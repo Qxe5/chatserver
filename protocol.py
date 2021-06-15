@@ -1,3 +1,4 @@
+import random
 import string
 import time
 
@@ -8,12 +9,13 @@ class chat_proto(LineOnlyReceiver):
     MAX_LENGTH = 256
     delimiter = b'\n'
     username_prompt = colored.attr('bold').encode() + b'Username:' + colored.attr(0).encode()
+    avail_colors = list(range(1, 7))
     ratelimit_interval = 1
     ratelimit_maxwarn = 8
 
     def __init__(self):
         self.username = None
-        self.color = 2
+        self.color = random.choice(chat_proto.avail_colors)
         self.lastmsgtime = time.time()
         self.ratelimit_warn = 0
 
