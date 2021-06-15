@@ -46,7 +46,7 @@ class chat_proto(LineOnlyReceiver):
             else:
                 self.username = line
                 self.factory.clients.append(self)
-                self.factory.users.add(self.username)
+                self.factory.users.append(self.username)
 
                 valid_username = True
                 for c in self.username:
@@ -67,6 +67,15 @@ class chat_proto(LineOnlyReceiver):
             for user in self.factory.users:
                 self.sendLine(user)
             self.sendLine(b'')
+        elif line.lower() == b'!kick':
+            with open('kicklist', 'r+b') as kicklist:
+                users = [user.strip() for user in kicklist.readlines()]
+                
+                for user in users:
+                    if user in self.factory.users:
+                        self.factory.clients[self.factory.users.index(user)].dc(b'Kicked')
+
+                kicklist.truncate(0)
         else:
             if time.time() - self.lastmsgtime >= chat_proto.ratelimit_interval:
                 self.msg(colored.fg(self.color).encode() + self.username + colored.attr(0).encode() + b' ' + line)

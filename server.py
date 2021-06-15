@@ -8,7 +8,7 @@ port = 2000
 factory = ServerFactory()
 factory.protocol = protocol.chat_proto
 factory.clients = []
-factory.users = set()
+factory.users = []
 
 reactor.listenTCP(port, factory)
 reactor.run()
