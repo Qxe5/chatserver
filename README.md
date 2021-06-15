@@ -5,5 +5,5 @@ Simple chat server using twisted
 
 To join:
 ```
-torsocks telnet ewjhkxhpajxzmvifpzy2zrbbk5yrnkmlomputw2gm2qipvz6pqbuviqd.onion 2000
+nc -x 127.0.0.1:9050 ewjhkxhpajxzmvifpzy2zrbbk5yrnkmlomputw2gm2qipvz6pqbuviqd.onion 2000
 ```
