@@ -9,6 +9,7 @@ TODO:
 * Review pull request
 '''
 
+import string
 import time
 
 import colored
@@ -60,10 +61,19 @@ class chat_proto(LineOnlyReceiver):
                 self.factory.clients.append(self)
                 self.factory.users.add(self.username)
 
-                self.sendLine(b'\nYou are connected to the chat ' + colored.fg(self.color).encode() + self.username + colored.attr(0).encode())
-                self.sendLine(b'Type !users for a list of online users\n')
+                valid_username = True
+                for c in self.username:
+                    if chr(c) not in string.ascii_letters + string.digits:
+                        valid_username = False
 
-                self.msg(b'-> ' + colored.fg(self.color).encode() + self.username + colored.attr(0).encode())
+                if valid_username:
+                    self.sendLine(b'\nYou are connected to the chat ' + colored.fg(self.color).encode() + self.username + colored.attr(0).encode())
+                    self.sendLine(b'Type !users for a list of online users\n')
+                    self.msg(b'-> ' + colored.fg(self.color).encode() + self.username + colored.attr(0).encode())
+                else:
+                    self.sendLine(b'\nUsername can only contain letters and digits')
+                    self.sendLine(chat_proto.username_prompt)
+                    self.username = None
         elif len(line) == 0:
             self.sendLine(b'Not sent: Blank line')
         elif line.lower() == b'!users':
