@@ -108,7 +108,7 @@ class chat_proto(LineOnlyReceiver):
         sline = b''
 
         for c in line:
-            if c >= 32 and c <= 127:
+            if c >= 32 and c <= 126:
                 sline += chr(c).encode()
 
         return sline.strip()
