@@ -99,7 +99,7 @@ class chat_proto(LineOnlyReceiver):
     def msg(self, line):
         for client in self.factory.clients:
             if client != self:
-                client.transport.write(line + b'\n')
+                client.transport.write(b'[' + time.strftime('%H:%M %d-%m').encode() + b'] ' + line + b'\n')
 
     def strip(self, line):
         sline = b''
