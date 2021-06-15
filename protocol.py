@@ -72,9 +72,9 @@ class chat_proto(LineOnlyReceiver):
                 self.msg(colored.fg(self.color).encode() + self.username + colored.attr(0).encode() + b' ' + line)
                 self.lastmsgtime = time.time()
             else:
-                self.sendLine(b'Not sent: To quick (' + str(self.ratelimit_warn).encode() + b'/' + str(chat_proto.ratelimit_maxwarn).encode() + b')')
-
                 self.ratelimit_warn += 1
+
+                self.sendLine(b'Not sent: To quick (' + str(self.ratelimit_warn).encode() + b'/' + str(chat_proto.ratelimit_maxwarn).encode() + b')')
 
                 if self.ratelimit_warn == chat_proto.ratelimit_maxwarn:
                     self.dc(b'Rate limit exceeded')
