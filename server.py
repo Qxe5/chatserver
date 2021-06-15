@@ -5,7 +5,6 @@ TODO:
 * Edit readme
 * Subset of colors
 * Timestamps
-* One word username
 * Review pull request
 '''
 
