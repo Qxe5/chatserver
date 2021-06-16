@@ -44,23 +44,23 @@ class chat_proto(LineOnlyReceiver):
                 self.sendLine(line + b' is in use')
                 self.sendLine(chat_proto.username_prompt)
             else:
-                self.username = line
-                self.factory.clients.append(self)
-                self.factory.users.append(self.username)
-
                 valid_username = True
-                for c in self.username:
+                for c in line:
                     if chr(c) not in string.ascii_letters + string.digits:
                         valid_username = False
 
                 if valid_username:
+                    self.username = line
+                    self.factory.clients.append(self)
+                    self.factory.users.append(self.username)
+
                     self.sendLine(b'\nYou are connected to the chat ' + colored.fg(self.color).encode() + self.username + colored.attr(0).encode())
                     self.sendLine(b'Type !users for a list of online users\n')
+
                     self.msg(b'-> ' + colored.fg(self.color).encode() + self.username + colored.attr(0).encode())
                 else:
                     self.sendLine(b'\nUsername can only contain letters and digits')
                     self.sendLine(chat_proto.username_prompt)
-                    self.username = None
         elif len(line) == 0:
             self.sendLine(b'Not sent: Blank line')
         elif line.lower() == b'!users':
