@@ -20,12 +20,12 @@ class chat_proto(LineOnlyReceiver):
         self.ratelimit_warn = 0
 
     def connectionMade(self):
-        self.sendLine(b'\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        self.sendLine(b'\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         self.sendLine(b'Welcome!')
         self.sendLine(b'- You are connected to the server')
         self.sendLine(b'- Shitposting mildly tolerated')
         self.sendLine(b'- Source code: https://github.com/Qxe5/chatserver')
-        self.sendLine(b'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
+        self.sendLine(b'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
         self.sendLine(chat_proto.username_prompt)
 
     def connectionLost(self, reason):
