@@ -36,8 +36,6 @@ class chat_proto(LineOnlyReceiver):
             self.msg(b'<- ' + colored.fg(self.color).encode() + self.username + colored.attr(0).encode())
 
     def lineReceived(self, line):
-        line = self.strip(line)
-
         if not self.username:
             if len(line) == 0:
                 self.sendLine(chat_proto.username_prompt)
@@ -79,7 +77,7 @@ class chat_proto(LineOnlyReceiver):
                 kicklist.truncate(0)
         else:
             if time.time() - self.lastmsgtime >= chat_proto.ratelimit_interval:
-                self.msg(colored.fg(self.color).encode() + self.username + colored.attr(0).encode() + b' ' + line)
+                self.msg(colored.fg(self.color).encode() + self.username + colored.attr(0).encode() + b' ' + self.strip(line))
                 self.lastmsgtime = time.time()
             else:
                 self.ratelimit_warn += 1
