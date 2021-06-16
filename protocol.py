@@ -24,6 +24,7 @@ class chat_proto(LineOnlyReceiver):
         self.sendLine(b'Welcome!')
         self.sendLine(b'- You are connected to the server')
         self.sendLine(b'- Shitposting mildly tolerated')
+        self.sendLine(b'- Source code: https://github.com/Qxe5/chatserver')
         self.sendLine(b'~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n')
         self.sendLine(chat_proto.username_prompt)
 
@@ -70,7 +71,7 @@ class chat_proto(LineOnlyReceiver):
         elif line.lower() == b'!kick':
             with open('kicklist', 'r+b') as kicklist:
                 users = [user.strip() for user in kicklist.readlines()]
-                
+
                 for user in users:
                     if user in self.factory.users:
                         self.factory.clients[self.factory.users.index(user)].dc(b'Kicked')
